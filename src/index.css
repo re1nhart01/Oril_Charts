@@ -121,13 +121,66 @@ thead tr {
   font-family: Montserrat;
   font-style: normal;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 0.8750em;
   line-height: 20px;
 }
 
 .buttons {
-
-  position: absolute;
-  left: 82%;
-  top: 10%;
+  position: relative;
+  left: 59.2vw;
+  top: 0%;
 }
+
+.chart_stats {
+  position: relative;
+  left: 3%;
+  top: -5%;
+}
+
+.chart_stats h3, h1 {
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 1.1250em;
+  line-height: 100%;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+.chart_stats h1 {
+  font-size: 1.5000em;
+  position: relative;
+  top: -15px;
+}
+
+
+
+
+.chart_stats span {
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  color: #9C9C9C;
+  margin-right: 30px;
+}
+
+.chart_stats h3 {
+  margin-right: 1.6%;
+}
+
+
+.chart_stats_max_value {
+  margin-left: 0.6%;
+}
+
+.chart_stats_min_value {
+
+}
+
+.chart_stats h1 {
+  margin-bottom: 10px;
+  margin-top: 0%;
+}
+
+
