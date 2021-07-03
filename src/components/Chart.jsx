@@ -2,7 +2,9 @@ import React from "react";
 import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
 import axios from "axios";
 import {useEffect, useState} from "react";
-
+import {dateParser} from "../lib";
+import {byField} from "../lib";
+import {Month} from "../lib";
 
 
 // @React.FC \\
@@ -16,6 +18,7 @@ const Chart = (props) => {
             2 - Show chart for the month (current, last 30 days)
             3 - Show chart for the year (current, 2021)
             */
+
             const [chartState, setChartState] = useState(1);
 
 
@@ -40,17 +43,6 @@ const Chart = (props) => {
         })
         console.log(apiData);
 
-    }
-
-    function byField(field) {
-        return (a, b) => a[field] > b[field] ? 1 : -1;
-    }
-
-    const dateParser = (timestamp, localtime = 0) => {
-        const parser = new Date(Date.parse(timestamp))
-        const day = parser.getDay() === 0 ? 1 : parser.getDay()
-        const month = parser.getMonth() === 0 ? 1 : parser.getMonth()
-        return `${day < 10 ? "0" : ""}${day}.${month < 10 ? "0" : ""}${localtime === 1 ?month + 1 : month}.${parser.getFullYear()}`
     }
 
 
@@ -114,21 +106,6 @@ const chartMonth = arrayOfDays.map((el,index) => {
      // })
 
 
-
-const Month = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec"
-]
     const chartDataForYear = sortForYear().map((el, index) => {
         return {
             Date: Month[index],

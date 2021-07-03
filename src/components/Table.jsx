@@ -2,7 +2,8 @@ import React from "react";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {NavLink} from "react-router-dom";
-
+import {dateParser} from "../lib";
+import {byField} from "../lib";
 
 const url = "https://oril-coins-test.herokuapp.com/list"
 
@@ -14,6 +15,8 @@ const [byName, setByName] = useState(false);
     const [byDate, setByDate] = useState(false);
     const [byState, setByState] = useState(false);
     const [searched, setSearched] = useState("");
+const [search, setSearch] = useState([])
+
 
 useEffect(() => {
     axios.get(url).then((res) => {
@@ -27,20 +30,26 @@ useEffect(() => {
     })
 },[sortedData])
 
-    function byField(field) {
-        return (a, b) => a[field] > b[field] ? 1 : -1;
+
+    useEffect(() => {
+        if (sortedData) {
+            const Filter = sortedData.filter(el => {
+                return el.name.toLowerCase().includes(String(searched.toLowerCase()))
+            })
+            console.clear()
+            setSearch(Filter);
+        }},[searched])
+
+
+
+
+    const renderCondition = () => {
+    if (searched === "" | " ") {
+        return sortedData
+    } else {
+        return search
     }
-
-
-
-    const dateParser = (timestamp) => {
-        const parser = new Date(Date.parse(timestamp))
-        return `${parser.getDay() < 10 ? "0" : ""}${parser.getDay()}.${parser.getMonth() < 10 ? "0" : ""}${parser.getMonth()}.${parser.getFullYear()}`
     }
-
-
-
-
 
 const renderList = () => {
     if (!data) {
@@ -50,7 +59,7 @@ const renderList = () => {
             </div>
         )
     } else {
-        return sortedData.map(e => {
+        return renderCondition().map(e => {
             return (
                 <tr key={e.createdAt}>
                     <td><NavLink to={{
@@ -78,9 +87,6 @@ const renderList = () => {
     }
 
 
-    const onSearch = () => {
-
-    }
 
     const sort = (element) => {
     setByName(false)
@@ -92,7 +98,7 @@ const renderList = () => {
     return (
         <div className="wrapper">
             <div className="ui left icon input input_body">
-                <input type="text" placeholder="Search..." value={searched} onChange={e => setSearched(e.target.value)} />
+                <input type="text" placeholder="Search..." value={searched} onChange={e =>  setSearched(e.target.value)} />
                 <i className="search icon"></i>
             </div>
             <div className="table_body">
