@@ -11,17 +11,19 @@ const url = "https://oril-coins-test.herokuapp.com/list"
 const Table = (props) => {
 const [data, setData] = useState([]);
 const [sortedData, setSortedData] = useState([]);
-const [byName, setByName] = useState(false);
-    const [byDate, setByDate] = useState(false);
-    const [byState, setByState] = useState(false);
+    const [sortBy, setSortBy] = useState(0);
     const [searched, setSearched] = useState("");
 const [search, setSearch] = useState([])
+
+    useEffect(() => {
+        InitialBy(0);
+    }, [])
 
 
 useEffect(() => {
     axios.get(url).then((res) => {
         setData(res.data);
-         const Sorted = byName === true ? "name" : byDate === true ? "createdAt" : byState === true ? "isActive" : ""
+         const Sorted = sortBy === 1 ? "name" : sortBy === 2 ? "createdAt" : sortBy === 3 ? "isActive" : ""
         if(Sorted === "isActive") {
             setSortedData(data.sort((a, b) => a[Sorted] > b[Sorted] ? -1 : 1));
         } else {
@@ -30,6 +32,9 @@ useEffect(() => {
     })
 },[sortedData])
 
+    const InitialBy = (value) => {
+        setSortBy(value);
+    }
 
     useEffect(() => {
         if (sortedData) {
@@ -42,15 +47,12 @@ useEffect(() => {
 
 
 
-
     const renderCondition = () => {
     if (searched === "" | " ") {
         return sortedData
     } else {
         return search
-    }
-    }
-
+    }}
 const renderList = () => {
     if (!data) {
         return (
@@ -88,35 +90,59 @@ const renderList = () => {
 
 
 
-    const sort = (element) => {
-    setByName(false)
-        setByDate(false)
-        setByState(false)
-        element(true);
-    }
-
+if (data.length < 1) {
     return (
-        <div className="wrapper">
-            <div className="ui left icon input input_body">
-                <input type="text" placeholder="Search..." value={searched} onChange={e =>  setSearched(e.target.value)} />
-                <i className="search icon"></i>
-            </div>
-            <div className="table_body">
-            <table className="ui table">
-                <thead>
-                <tr>
-                    <th className=""><button onClick={() => {sort(setByName)}} className="table_sortableBtn">NAME<i className={`angle ${byName === false ? "down" : "up"} icon`}></i></button></th>
-                    <th><button onClick={() => {sort(setByDate)}} className={`table_sortableBtn`}>DATE<i className={`angle ${byDate === false ? "down" : "up"} icon`}></i></button></th>
-                    <th><button onClick={() => {sort(setByState)}} className={"table_sortableBtn"}>STATE<i className={`angle ${byState === false ? "down" : "up"} icon`}></i></button></th>
-                </tr>
-                </thead>
-                <tbody>
-                {renderList()}
-                </tbody>
-            </table>
+        <div>
+            <div className="loader">
+                <div className="ui segment">
+                    <div className="ui active dimmer">
+                        <div className="ui large text loader">Loading</div>
+                    </div>
+                    <p></p>
+                </div>
             </div>
         </div>
     )
+} else {
+    return (
+        <div className="wrapper">
+            <div className="ui left icon input input_body">
+                <input type="text" placeholder="Search..." value={searched}
+                       onChange={e => setSearched(e.target.value)}/>
+                <i className="search icon"></i>
+            </div>
+            <div className="table_body">
+                <table className="ui table">
+                    <thead>
+                    <tr>
+                        <th className="">
+                            <button onClick={() => {
+                                setSortBy(1)
+                            }} className="table_sortableBtn">NAME<i
+                                className={`angle ${sortBy === 1 ? "up" : "down"} icon`}></i></button>
+                        </th>
+                        <th>
+                            <button onClick={() => {
+                                setSortBy(2)
+                            }} className={`table_sortableBtn`}>DATE<i
+                                className={`angle ${sortBy === 2 ? "up" : "down"} icon`}></i></button>
+                        </th>
+                        <th>
+                            <button onClick={() => {
+                                setSortBy(3)
+                            }} className={"table_sortableBtn"}>STATE<i
+                                className={`angle ${sortBy === 3 ? "up" : "down"} icon`}></i></button>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {renderList()}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    )
+}
 }
 
 
