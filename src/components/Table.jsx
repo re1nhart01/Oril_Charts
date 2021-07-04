@@ -21,15 +21,18 @@ const [search, setSearch] = useState([])
 
 
 useEffect(() => {
-    axios.get(url).then((res) => {
-        setData(res.data);
-         const Sorted = sortBy === 1 ? "name" : sortBy === 2 ? "createdAt" : sortBy === 3 ? "isActive" : ""
-        if(Sorted === "isActive") {
-            setSortedData(data.sort((a, b) => a[Sorted] > b[Sorted] ? -1 : 1));
-        } else {
-            setSortedData(data.sort(byField(Sorted)));
-        }
-    })
+    const fetchData = () => {
+        axios.get(url).then((res) => {
+            setData(res.data);
+            const Sorted = sortBy === 1 ? "name" : sortBy === 2 ? "createdAt" : sortBy === 3 ? "isActive" : ""
+            if (Sorted === "isActive") {
+                setSortedData(data.sort((a, b) => a[Sorted] > b[Sorted] ? -1 : 1));
+            } else {
+                setSortedData(data.sort(byField(Sorted)));
+            }
+        })
+    }
+    fetchData();
 },[sortedData])
 
     const InitialBy = (value) => {
@@ -41,7 +44,6 @@ useEffect(() => {
             const Filter = sortedData.filter(el => {
                 return el.name.toLowerCase().includes(String(searched.toLowerCase()))
             })
-            console.clear()
             setSearch(Filter);
         }},[searched])
 
@@ -89,7 +91,7 @@ const renderList = () => {
     }
 
 
-
+// @render \\
 if (data.length < 1) {
     return (
         <div>

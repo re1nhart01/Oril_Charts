@@ -15,16 +15,12 @@ const Chart = (props) => {
             const [isFetched, setFetched] = useState(false);
             const [chartState, setChartState] = useState(1);
             let chartData = [];
-              /*
-              1 - Show chart for the week (current, last 7 days)
-              2 - Show chart for the month (current, last 30 days)
-              3 - Show chart for the year (current, 2021)
-              */
 
 
-    useEffect(() => {
-        fetchData();
-    },[isFetched])
+            useEffect(() => {
+            fetchData();
+
+            },[isFetched])
 
 
   function fetchData () {
@@ -36,13 +32,12 @@ const Chart = (props) => {
             }).sort(byField("date"))
             setData(dateFilter)
             setFetched(true);
-            stats();
+            Stats();
         })
     }
 
 
     function sortForWeeks(condition, lastDay = 31) {
-        const arrayOfData = [];
         const arrayOfDays = [];
         data.map(el => {
             const month = new Date(Date.parse(el.date)).getMonth() + 1
@@ -50,29 +45,15 @@ const Chart = (props) => {
                 const day = new Date(Date.parse(el.date)).getDate()
                 if (day != lastDay - 7 && day >= lastDay - 7) {
                     arrayOfDays.push(el);
-                    console.log(arrayOfDays)
-                }
-                console.log(el.date)
-
-
-            }
-
-        });
-
-        console.log(arrayOfDays);
+                }}});
         const chartDays = arrayOfDays.map((el, index) => {
-            console.log(el)
             return {
                 Date: dateParser(el.date, 1),
                 Currency: Number(Math.round(el.curency === "null" ? 0 : el.curency))
             }
         })
-
         return chartDays
     }
-
-
-
 
 
     function sortForYear() {
@@ -102,23 +83,16 @@ const Chart = (props) => {
     }
 
 
-
     function sortForMonth() {
         const arrayOfDays = [];
         const arrayOfCurrency = [];
-
             data.map(el => {
                 const month = new Date(Date.parse(el.date)).getMonth()
                 if (month === 11) {
                     arrayOfDays.push(el.date);
                         arrayOfCurrency.push(Number(Math.round(el.curency === "null" ? 0 : el.curency)));
                     }
-
-
             })
-
-console.log(arrayOfDays, arrayOfCurrency)
-
 const chartMonth = arrayOfDays.map((el,index) => {
     return {
         Date: dateParser(el, 1),
@@ -143,10 +117,10 @@ const chartMonth = arrayOfDays.map((el,index) => {
                 setChartState(1);
             }
         }};
+    State();
 
-State()
 
-    const stats = () => {
+    const Stats = () => {
         const array = [];
         let min = 0;
         let avg = 0;
@@ -155,11 +129,9 @@ State()
        data.map(el => {
        total = Number(total + Math.round(el.curency === "null" ? 0 : el.curency))
            array.push(Number(Math.round(el.curency === "null" ? 0 : el.curency)));
-
        })
        min = Math.min.apply(Math, array);
         max = Math.max.apply(Math, array);
-        console.log(array);
         avg = Math.round(total / array.length)
         return {
             total: total,
@@ -199,15 +171,15 @@ State()
                     <div className="ui basic buttons">
                         <div onClick={() => {
                             setChartState(1)
-                        }} className="ui button chart_button">Week
+                        }} className={`ui button chart_button ${chartState === 1 ? "active" : ""}`}>Week
                         </div>
                         <div onClick={() => {
                             setChartState(2)
-                        }} className="ui button chart_button">Month
+                        }} className={`ui button chart_button ${chartState === 2 ? "active" : ""}`}>Month
                         </div>
                         <div onClick={() => {
                             setChartState(3)
-                        }} className="ui button chart_button">Year
+                        }} className={`ui button chart_button ${chartState === 3 ? "active" : ""}`}>Year
                         </div>
                     </div>
                     <ResponsiveContainer width="98.4%" height="60%">
@@ -240,15 +212,15 @@ State()
                     <div className="chart_stats">
                         <div>
                             <span>Total</span>
-                            <div><h1>$ {stats().total}</h1></div>
+                            <div><h1>$ {Stats().total}</h1></div>
                         </div>
                         <span>Min</span>
                         <span>Average</span>
                         <span>Max</span>
                         <br/>
-                        <h3 className="chart_stats_min_value">$ {stats().min}</h3>
-                        <h3 className="chart_stats_avg_value">$ {stats().avg}</h3>
-                        <h3 className="chart_stats_max_value">$ {stats().max}</h3>
+                        <h3 className="chart_stats_min_value">$ {Stats().min}</h3>
+                        <h3 className="chart_stats_avg_value">$ {Stats().avg}</h3>
+                        <h3 className="chart_stats_max_value">$ {Stats().max}</h3>
                     </div>
                 </div>
             </div>
