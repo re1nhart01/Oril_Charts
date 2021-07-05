@@ -23,7 +23,7 @@ const Chart = (props) => {
   const [chartState, setChartState] = useState(1);
   let chartData = [];
   const item = props.location.state.item;
-
+  window.top.document.title = `${props.location.state.data.name} chart`;
   useEffect(() => {
     fetchChartData(
       setApiData,
